@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import PrimeVue from "primevue/config";
 import { router } from "./router";
+import Store from "./store/index";
 
 //primevue -css
 import "primeflex/primeflex.css"; //flex css
@@ -22,6 +23,7 @@ import Card from "primevue/card";
 
 app.use(PrimeVue);
 app.use(router);
+app.use(Store);
 
 // prime components
 app.component("InputText", InputText);

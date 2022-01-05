@@ -28,6 +28,7 @@
               id="full_name"
               type="text"
               placeholder="enter fullName"
+              v-model="user_data.name"
             />
           </div>
         </div>
@@ -89,13 +90,17 @@
           <div class="label p-mb-1">phone</div>
           <div class="p-inputgroup">
             <span class="p-inputgroup-addon">+91</span>
-            <InputText type="text" />
+            <InputText type="text" v-model="user_data.phone" />
           </div>
         </div>
 
         <!-- field submit_button -->
         <div class="submit_button">
-          <Buttons label="Next" class="submit_button" />
+          <Buttons
+            label="Next"
+            class="submit_button"
+            v-on:click="uservalue()"
+          />
         </div>
       </div>
 
@@ -118,6 +123,10 @@ export default {
       selectedCountry: null,
       selected_phcode: null,
 
+      user_data: {
+        name: "",
+        phone: null,
+      },
       // steps
       items: [
         { label: "personal details" },
@@ -145,12 +154,16 @@ export default {
         { name: "Spain", code: "ES" },
         { name: "United States", code: "US" },
       ],
-
-      // ph_code: [
-      //   { name: "india", code: "+91" },
-      //   { name: "usa", code: "+811", value: "+811" },
-      // ],
     };
+  },
+  methods: {
+    uservalue() {
+      // this.$store.dispatch("insert_user", this.userinputData);
+      let userData = this.user_data;
+      console.log("userinputData", userData);
+      this.$store.dispatch("insert_user", userData);
+      console.log(this.$store.getters.data);
+    },
   },
 };
 </script>
