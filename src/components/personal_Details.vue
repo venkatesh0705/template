@@ -11,15 +11,15 @@
     <div class="main_component p-d-flex p-flex-column p-ai-center p-jc-center">
       <!-- heading -->
       <div class="heading p-d-flex p-flex-column p-ai-center">
-        <div class="title p-mb-3">add your personal details</div>
-        <div class="sub_title p-mb-3">
+        <div class="title">Add your personal details</div>
+        <div class="sub_title">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry.
         </div>
       </div>
 
       <!-- content -->
-      <div class="content p-mb-3 p-p-5">
+      <div class="content p-p-5">
         <!-- field name -->
         <div class="name p-mb-4 p-fluid">
           <div class="label p-pb-1">Full Name</div>
@@ -27,7 +27,7 @@
             <InputText
               id="full_name"
               type="text"
-              placeholder="enter fullName"
+              placeholder="Enter fullName"
               v-model="user_data.name"
             />
           </div>
@@ -37,11 +37,19 @@
         <div class="gender p-mb-4">
           <div class="label p-pb-1">gender</div>
           <div class="p-d-flex p-jc-start">
+            <!-- {{ selectedgender }}
+
+            <label for="male" id="gender">
+              <input type="radio" id="male" />
+              <span>male</span>
+            </label> -->
+
             <Buttons
               id="gender_toggle"
               class="p-button-text p-mx-1"
               label="Male"
             />
+
             <Buttons
               id="gender_toggle"
               class="p-button-text p-mx-1"
@@ -60,7 +68,7 @@
           <div class="label p-mb-1">country</div>
           <div class="dropdown">
             <Dropdowns
-              v-model="selectedCountry"
+              v-model="user_data.selectedCountry"
               :options="countries"
               optionLabel="name"
               :filter="true"
@@ -103,6 +111,7 @@
           />
         </div>
       </div>
+      <div></div>
 
       <!-- footer_content -->
       <div class="footer">
@@ -126,6 +135,7 @@ export default {
       user_data: {
         name: "",
         phone: null,
+        selectedCountry: null,
       },
       // steps
       items: [
@@ -162,13 +172,69 @@ export default {
       let userData = this.user_data;
       console.log("userinputData", userData);
       this.$store.dispatch("insert_user", userData);
-      console.log(this.$store.getters.data);
+      console.log(this.$store.getters.getdata);
+    },
+  },
+
+  computed: {
+    datas() {
+      return this.$store.getters.getdata;
     },
   },
 };
 </script>
 
 <style scoped>
+.p-card {
+  background-color: #2e4b64;
+  padding: 14px 0;
+  border-radius: 0;
+}
+
+:deep .p-steps .p-steps-item:before {
+  border: none;
+}
+
+:deep .p-steps .p-steps-item .p-menuitem-link {
+  background-color: #2e4b64;
+}
+
+:deep .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
+  background: #28435a;
+  border-color: #28435a;
+  color: #ffffff;
+}
+
+:deep .p-steps-title {
+  color: #ffffff !important;
+  font-size: 15px;
+}
+
+:deep .p-menuitem-link {
+  flex-direction: row !important;
+}
+
+:deep .p-steps-title {
+  margin: 0 0.5rem !important;
+}
+
+#gender {
+  border: 1px solid #ececec;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 3px;
+  transition: all 0.3ms ease-in-out;
+}
+
+#gender:hover {
+  background-color: rgba(237, 89, 1, 0.1);
+  color: #ed5901;
+}
+
+#male {
+  display: none;
+}
+
 .personal_details {
   margin: 0;
   padding: 0;
@@ -180,11 +246,12 @@ export default {
 .title {
   font-size: 36px;
   font-weight: 700;
-  text-transform: capitalize;
+  margin-top: 25px;
 }
 .sub_title {
   font-size: 15px;
   font-weight: 400;
+  margin-top: 17px;
 }
 
 .content {
@@ -192,6 +259,7 @@ export default {
   border-radius: 3px;
   max-width: 508px;
   width: 100%;
+  margin-top: 30px;
 }
 .label {
   color: rgba(10, 9, 9, 0.6);
@@ -238,6 +306,10 @@ export default {
 
 .submit_button:hover {
   background-color: #cf4d02 !important;
+}
+
+.footer {
+  margin: 15px 0 26px 0;
 }
 
 /* sign_in -css */

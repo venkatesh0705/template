@@ -5,8 +5,8 @@ export default createStore({
     data: [],
   },
   getters: {
-    data(s) {
-      return s.data;
+    getdata(u) {
+      return u.data;
     },
   },
   mutations: {
