@@ -29,37 +29,45 @@
               type="text"
               placeholder="Enter fullName"
               v-model="user_data.name"
+              :class="{ 'is-invalid': submitted && $v.user_data.name.$error }"
             />
           </div>
         </div>
 
         <!-- field gender -->
         <div class="gender p-mb-4">
-          <div class="label p-pb-1">gender</div>
-          <div class="p-d-flex p-jc-start">
-            <!-- {{ selectedgender }}
-
-            <label for="male" id="gender">
-              <input type="radio" id="male" />
-              <span>male</span>
-            </label> -->
-
-            <Buttons
-              id="gender_toggle"
-              class="p-button-text p-mx-1"
-              label="Male"
-            />
-
-            <Buttons
-              id="gender_toggle"
-              class="p-button-text p-mx-1"
-              label="Female"
-            />
-            <Buttons
-              id="gender_toggle"
-              class="p-button-text p-mx-1"
-              label="others"
-            />
+          <div class="label p-pb-2">gender</div>
+          <div class="p-d-flex p-mb-4 p-mt-1 p-jc-start">
+            <div class="gender_toggler gender">
+              <input
+                type="radio"
+                name="gender"
+                id="male"
+                value="male"
+                v-model="user_data.gender"
+              />
+              <label class="gender_label" for="male">male</label>
+            </div>
+            <div class="gender_toggler">
+              <input
+                type="radio"
+                name="gender"
+                id="female"
+                value="female"
+                v-model="user_data.gender"
+              />
+              <label class="gender_label" for="female">female</label>
+            </div>
+            <div class="gender_toggler">
+              <input
+                type="radio"
+                name="gender"
+                id="other"
+                value="other"
+                v-model="user_data.gender"
+              />
+              <label class="gender_label" for="other">other</label>
+            </div>
           </div>
         </div>
 
@@ -125,17 +133,35 @@
 </template>
 
 <script>
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 export default {
+  setup() {
+    return {
+      v$: useVuelidate(),
+    };
+  },
   data() {
     return {
       selectedgender: null,
       selectedCountry: null,
       selected_phcode: null,
 
+      // v$: useValidate(),
       user_data: {
         name: "",
         phone: null,
+        gender: "",
         selectedCountry: null,
+      },
+
+      validations: {
+        user_data: {
+          name: { required },
+          phone: { required },
+          gender: { required },
+          selectedCountry: { required },
+        },
       },
       // steps
       items: [
@@ -168,11 +194,21 @@ export default {
   },
   methods: {
     uservalue() {
-      // this.$store.dispatch("insert_user", this.userinputData);
+      // vuex
       let userData = this.user_data;
       console.log("userinputData", userData);
       this.$store.dispatch("insert_user", userData);
       console.log(this.$store.getters.getdata);
+
+      //vuelidate
+      console.log(this.v$);
+
+      this.v$.$touch();
+      if (this.$v.user_data.$error) {
+        console.log("error");
+      } else {
+        console.log("no error");
+      }
     },
   },
 
@@ -185,6 +221,7 @@ export default {
 </script>
 
 <style scoped>
+/* steps component */
 .p-card {
   background-color: #2e4b64;
   padding: 14px 0;
@@ -218,15 +255,36 @@ export default {
   margin: 0 0.5rem !important;
 }
 
-#gender {
-  border: 1px solid #ececec;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 3px;
-  transition: all 0.3ms ease-in-out;
+/* gender field */
+
+input[type="radio"] {
+  display: none;
 }
 
-#gender:hover {
+.gender {
+  margin: 0 0.5rem 0 0 !important;
+}
+
+.gender_label {
+  font-size: 15px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ececec;
+  border-radius: 3px;
+  background-color: white;
+  transition: 0.1s all ease-out;
+  cursor: pointer;
+}
+
+.gender_toggler {
+  margin: 0 0.5rem;
+}
+
+input[type="radio"]:checked + .gender_label {
+  background-color: rgba(237, 89, 1, 0.1);
+  color: #ed5901;
+}
+
+gender_.gender_label {
   background-color: rgba(237, 89, 1, 0.1);
   color: #ed5901;
 }
