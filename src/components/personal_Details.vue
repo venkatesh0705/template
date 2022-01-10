@@ -28,10 +28,17 @@
               id="full_name"
               type="text"
               placeholder="Enter fullName"
-              v-model="user_data.name"
-              :class="{ 'is-invalid': submitted && $v.user_data.name.$error }"
+              :class="{ invalid: v$.user_data.name.$error }"
+              v-model="state.user_data.name"
             />
           </div>
+          <small
+            class="invalid_text"
+            v-for="error of v$.user_data.name.$errors"
+            :key="error.uid"
+          >
+            {{ error.$message }}
+          </small>
         </div>
 
         <!-- field gender -->
@@ -44,7 +51,7 @@
                 name="gender"
                 id="male"
                 value="male"
-                v-model="user_data.gender"
+                v-model="state.user_data.gender"
               />
               <label class="gender_label" for="male">male</label>
             </div>
@@ -54,7 +61,7 @@
                 name="gender"
                 id="female"
                 value="female"
-                v-model="user_data.gender"
+                v-model="state.user_data.gender"
               />
               <label class="gender_label" for="female">female</label>
             </div>
@@ -64,10 +71,19 @@
                 name="gender"
                 id="other"
                 value="other"
-                v-model="user_data.gender"
+                v-model="state.user_data.gender"
               />
               <label class="gender_label" for="other">other</label>
             </div>
+          </div>
+          <div>
+            <small
+              class="invalid_text"
+              v-for="error of v$.user_data.gender.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </small>
           </div>
         </div>
 
@@ -76,13 +92,22 @@
           <div class="label p-mb-1">country</div>
           <div class="dropdown">
             <Dropdowns
-              v-model="user_data.selectedCountry"
+              :class="{ invalid: v$.user_data.selectedCountry.$error }"
+              v-model="state.user_data.selectedCountry"
               :options="countries"
               optionLabel="name"
               :filter="true"
               placeholder="Select a Country"
               :showClear="true"
             />
+          </div>
+          <div>
+            <small
+              class="invalid_text"
+              v-for="error of v$.user_data.selectedCountry.$errors"
+              :key="error.$uid"
+              >{{ error.$message }}</small
+            >
           </div>
         </div>
 
@@ -106,7 +131,20 @@
           <div class="label p-mb-1">phone</div>
           <div class="p-inputgroup">
             <span class="p-inputgroup-addon">+91</span>
-            <InputText type="text" v-model="user_data.phone" />
+            <InputText
+              type="text"
+              v-model="state.user_data.phone"
+              :class="{ invalid: v$.user_data.phone.$error }"
+            />
+          </div>
+          <div>
+            <small
+              class="invalid_text"
+              v-for="error of v$.user_data.phone.$errors"
+              :key="error.uid"
+            >
+              {{ error.$message }}
+            </small>
           </div>
         </div>
 
@@ -115,7 +153,7 @@
           <Buttons
             label="Next"
             class="submit_button"
-            v-on:click="uservalue()"
+            @click="submited_data()"
           />
         </div>
       </div>
@@ -134,35 +172,43 @@
 
 <script>
 import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, numeric, minLength } from "@vuelidate/validators";
+import { reactive, computed } from "vue";
 export default {
   setup() {
+    const state = reactive({
+      user_data: {
+        name: "",
+        phone: null,
+        gender: null,
+        selectedCountry: null,
+      },
+    });
+
+    const rules = computed(() => {
+      return {
+        user_data: {
+          name: { required },
+          phone: { required, numeric, min: minLength(9) },
+          gender: { required },
+          selectedCountry: { required },
+        },
+      };
+    });
+
+    const v$ = useVuelidate(rules, state);
+
     return {
-      v$: useVuelidate(),
+      state,
+      v$,
     };
   },
   data() {
     return {
-      selectedgender: null,
-      selectedCountry: null,
-      selected_phcode: null,
+      // selectedgender: null,
+      // selectedCountry: null,
+      // selected_phcode: null,
 
-      // v$: useValidate(),
-      user_data: {
-        name: "",
-        phone: null,
-        gender: "",
-        selectedCountry: null,
-      },
-
-      validations: {
-        user_data: {
-          name: { required },
-          phone: { required },
-          gender: { required },
-          selectedCountry: { required },
-        },
-      },
       // steps
       items: [
         { label: "personal details" },
@@ -193,30 +239,37 @@ export default {
     };
   },
   methods: {
-    uservalue() {
+    submited_data() {
       // vuex
-      let userData = this.user_data;
-      console.log("userinputData", userData);
-      this.$store.dispatch("insert_user", userData);
-      console.log(this.$store.getters.getdata);
-
-      //vuelidate
+      let userData = this.state.user_data;
+      console.log("userData", userData);
+      // //vuelidate
       console.log(this.v$);
-
-      this.v$.$touch();
-      if (this.$v.user_data.$error) {
-        console.log("error");
+      this.v$.$validate(); // checks all inputs
+      if (!this.v$.$error) {
+        this.$store.dispatch("insert_user", userData);
+        alert("Form successfully submitted.");
+        console.log("stored data:", this.$store.getters.getdata);
       } else {
-        console.log("no error");
+        alert("fill the form correctly");
       }
+      // if (this.$v.user_data.$errors) {
+      //   console.log("error");
+      // } else {
+      //   console.log("no error");
+      // }
     },
   },
 
-  computed: {
-    datas() {
-      return this.$store.getters.getdata;
-    },
+  datas() {
+    return this.$store.getters.getdata;
   },
+
+  // computed: {
+  //   datas() {
+  //     return this.$store.getters.getdata;
+  //   },
+  // },
 };
 </script>
 
@@ -255,6 +308,18 @@ export default {
   margin: 0 0.5rem !important;
 }
 
+/* error  display */
+:deep .invalid {
+  border: 2px solid red;
+}
+
+:deep .invalid:enabled:focus {
+  border-color: red !important;
+}
+
+.invalid_text {
+  color: red;
+}
 /* gender field */
 
 input[type="radio"] {
