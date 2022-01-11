@@ -116,13 +116,23 @@
           <div class="label p-mb-1">state</div>
           <div class="dropdown">
             <Dropdowns
-              v-model="selectedState"
-              :options="state"
+              :class="{ invalid: v$.user_data.selectedState.$error }"
+              v-model="state.user_data.selectedState"
+              :options="states"
               optionLabel="name"
               :filter="true"
               placeholder="Select a state"
               :showClear="true"
             />
+          </div>
+          <div>
+            <small
+              class="invalid_text"
+              v-for="error of v$.user_data.selectedState.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </small>
           </div>
         </div>
 
@@ -157,7 +167,6 @@
           />
         </div>
       </div>
-      <div></div>
 
       <!-- footer_content -->
       <div class="footer">
@@ -182,6 +191,7 @@ export default {
         phone: null,
         gender: null,
         selectedCountry: null,
+        selectedState: null,
       },
     });
 
@@ -192,6 +202,7 @@ export default {
           phone: { required, numeric, min: minLength(9) },
           gender: { required },
           selectedCountry: { required },
+          selectedState: { required },
         },
       };
     });
@@ -236,20 +247,27 @@ export default {
         { name: "Spain", code: "ES" },
         { name: "United States", code: "US" },
       ],
+
+      states: [
+        { name: "Tamilnadu", code: "TN" },
+        { name: "Andrapradesh", code: "AP" },
+        { name: "Uttarpradesh", code: "UP" },
+        { name: "Delhi", code: "Di" },
+      ],
     };
   },
   methods: {
     submited_data() {
-      // vuex
       let userData = this.state.user_data;
       console.log("userData", userData);
-      // //vuelidate
+
       console.log(this.v$);
       this.v$.$validate(); // checks all inputs
       if (!this.v$.$error) {
         this.$store.dispatch("insert_user", userData);
         alert("Form successfully submitted.");
         console.log("stored data:", this.$store.getters.getdata);
+        this.$router.push("/company_details");
       } else {
         alert("fill the form correctly");
       }
