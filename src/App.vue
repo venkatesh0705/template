@@ -1,13 +1,16 @@
 <template>
-  <Personal_Details />
+  <!-- <Personal_Details /> -->
+  <Template />
 </template>
 
 <script>
-import Personal_Details from "./components/personal_Details.vue";
+// import Personal_Details from "./components/personal_Details.vue";
+import Template from "./components/template.vue";
 export default {
   name: "App",
   components: {
-    Personal_Details,
+    // Personal_Details,
+    Template,
   },
 };
 </script>
@@ -19,5 +22,9 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Lato", sans-serif;
+}
+:root {
+  --txt-org: #ed5901 !important;
+  --txt-grey: rgba(10, 9, 9, 0.6);
 }
 </style>

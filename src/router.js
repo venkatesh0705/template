@@ -15,7 +15,7 @@ export const router = createRouter({
       component: company_Details,
     },
     {
-      path: "/emai_verificaion",
+      path: "/email_verification",
       component: email_verification,
     },
   ],

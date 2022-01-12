@@ -1,11 +1,6 @@
 <template>
   <div class="personal_details">
     <!-- header -->
-    <div class="steps p-mb-2">
-      <div class="p-card">
-        <Steps :model="items" :readonly="true" />
-      </div>
-    </div>
 
     <!-- main_contents -->
     <div class="main_component p-d-flex p-flex-column p-ai-center p-jc-center">
@@ -258,19 +253,20 @@ export default {
   },
   methods: {
     submited_data() {
-      let userData = this.state.user_data;
-      console.log("userData", userData);
+      // let userData = this.state.user_data;
+      // console.log("userData", userData);
 
-      console.log(this.v$);
-      this.v$.$validate(); // checks all inputs
-      if (!this.v$.$error) {
-        this.$store.dispatch("insert_user", userData);
-        alert("Form successfully submitted.");
-        console.log("stored data:", this.$store.getters.getdata);
-        this.$router.push("/company_details");
-      } else {
-        alert("fill the form correctly");
-      }
+      this.$emit("next-page", { pageIndex: 0 });
+
+      // console.log(this.v$);
+      // this.v$.$validate(); // checks all inputs
+      // if (!this.v$.$error) {
+      //   this.$store.dispatch("insert_user", userData);
+      //   alert("Form successfully submitted.");
+      //   console.log("stored data:", this.$store.getters.getdata);
+      // } else {
+      //   alert("fill the form correctly");
+      // }
       // if (this.$v.user_data.$errors) {
       //   console.log("error");
       // } else {
@@ -292,38 +288,13 @@ export default {
 </script>
 
 <style scoped>
-/* steps component */
-.p-card {
-  background-color: #2e4b64;
-  padding: 14px 0;
-  border-radius: 0;
-}
-
-:deep .p-steps .p-steps-item:before {
-  border: none;
-}
-
-:deep .p-steps .p-steps-item .p-menuitem-link {
-  background-color: #2e4b64;
-}
-
-:deep .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
-  background: #28435a;
-  border-color: #28435a;
-  color: #ffffff;
-}
-
-:deep .p-steps-title {
-  color: #ffffff !important;
-  font-size: 15px;
-}
-
-:deep .p-menuitem-link {
-  flex-direction: row !important;
-}
-
-:deep .p-steps-title {
-  margin: 0 0.5rem !important;
+/* main_component */
+.personal_details {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100vh;
+  background-color: rgba(46, 47, 100, 0.03);
 }
 
 /* error  display */
@@ -374,14 +345,6 @@ gender_.gender_label {
 
 #male {
   display: none;
-}
-
-.personal_details {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  height: 100vh;
-  background-color: rgba(46, 47, 100, 0.03);
 }
 
 .title {
