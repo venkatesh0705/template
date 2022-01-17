@@ -78,6 +78,10 @@ export default {
   color: #ffffff;
 }
 
+:deep .p-highlight .p-steps-number {
+  background: var(--txt-org) !important;
+}
+
 :deep .p-steps-title {
   color: #ffffff !important;
   font-size: 15px;
@@ -89,5 +93,9 @@ export default {
 
 :deep .p-steps-title {
   margin: 0 0.5rem !important;
+}
+
+router-view {
+  height: 80vh;
 }
 </style>

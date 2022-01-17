@@ -253,20 +253,28 @@ export default {
   },
   methods: {
     submited_data() {
-      // let userData = this.state.user_data;
-      // console.log("userData", userData);
-
-      this.$emit("next-page", { pageIndex: 0 });
+      // user entered data
+      let userData = this.state.user_data;
 
       // console.log(this.v$);
-      // this.v$.$validate(); // checks all inputs
-      // if (!this.v$.$error) {
-      //   this.$store.dispatch("insert_user", userData);
-      //   alert("Form successfully submitted.");
-      //   console.log("stored data:", this.$store.getters.getdata);
-      // } else {
-      //   alert("fill the form correctly");
-      // }
+      this.v$.$validate(); // checks all inputs
+
+      // checks all inputs
+      if (!this.v$.$error) {
+        //triggering actions
+        this.$store.dispatch("insert_user", userData);
+
+        // alert
+        alert("Form successfully submitted.");
+
+        // stored data
+        console.log("stored data:", this.$store.getters.getdata);
+
+        // router
+        this.$emit("next-page", { pageIndex: 0 });
+      } else {
+        alert("fill the form correctly");
+      }
       // if (this.$v.user_data.$errors) {
       //   console.log("error");
       // } else {

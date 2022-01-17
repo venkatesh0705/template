@@ -15,7 +15,7 @@ export default createStore({
     },
   },
   actions: {
-    insert_user({ context }, user) {
+    insert_user(context, user) {
       context.commit("INSERT_USER", user);
     },
   },
